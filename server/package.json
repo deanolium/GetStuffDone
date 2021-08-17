@@ -7,6 +7,7 @@
     "email": "deanolium@gmail.com"
   },
   "scripts": {
+    "dev:db": "mongod --dbpath ./data/db",
     "dev": "nodemon index.js"
   },
   "dependencies": {

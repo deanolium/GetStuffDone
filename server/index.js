@@ -3,6 +3,7 @@ const dotenv = require("dotenv")
 
 const helmet = require("helmet")
 const morgan = require("morgan")
+const connectDB = require("./db/connection")
 
 const todos = require("./todos")
 
@@ -20,4 +21,8 @@ app.get("/", (req, res) => {
   res.send("👋 Hello World 🐶")
 })
 
-app.listen(process.env.PORT)
+connectDB().then(async () =>
+  app.listen(process.env.PORT, () =>
+    console.log(`Listening on port ${process.env.PORT}`)
+  )
+)

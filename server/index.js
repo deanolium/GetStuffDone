@@ -18,11 +18,12 @@ app.use(morgan("common"))
 
 app.use("/todos", todos)
 app.get("/", (req, res) => {
-  res.send("👋 Hello World 🐶")
+  res.send("👋 Welcome to the server 🐶")
 })
 
 connectDB().then(async () =>
   app.listen(process.env.PORT, () =>
+    // eslint-disable-next-line no-console
     console.log(`Listening on port ${process.env.PORT}`)
   )
 )

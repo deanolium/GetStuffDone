@@ -9,7 +9,10 @@ import { TodoForm } from '../../types/Todo.type'
 const todoSchema = yup.object().shape({
   title: yup.string().required(),
   description: yup.string(),
-  dueDate: yup.date(),
+  dueDate: yup
+    .date()
+    .nullable()
+    .transform((curr, orig) => (orig === '' ? null : curr)),
 })
 
 const EditableTodo: VFC<{ onSubmit: (todoData: TodoForm) => void }> = ({
@@ -32,7 +35,12 @@ const EditableTodo: VFC<{ onSubmit: (todoData: TodoForm) => void }> = ({
       <article className={Styles.todo}>
         <header>
           <div className={`${Styles.title}`}>
-            <input type="text" {...register('title')} />
+            <input
+              type="text"
+              placeholder="Enter title"
+              {...register('title')}
+              required
+            />
           </div>
           <div className={Styles.status}>
             <button type="submit">Save</button>{' '}
@@ -40,6 +48,7 @@ const EditableTodo: VFC<{ onSubmit: (todoData: TodoForm) => void }> = ({
         </header>
         <section style={{ display: 'flex', flexDirection: 'column' }}>
           <textarea
+            placeholder="Enter description (optional)"
             style={{
               flex: '1 0 auto',
               width: 'calc(100% + 1rem)',

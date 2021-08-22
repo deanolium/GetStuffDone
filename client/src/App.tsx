@@ -3,32 +3,36 @@ import axios from 'axios'
 import { useCallback } from 'react'
 import { useState } from 'react'
 import './App.css'
-import { TodoModel } from './types/Todo.type'
+import { TodoForm, TodoModel } from './types/Todo.type'
 import Todo from './components/Todo'
+import EditableTodo from './components/EditableTodo/index'
 
 function App() {
   const [todos, setTodos] = useState<TodoModel[]>()
 
-  const fetchTodos = useCallback(() => {
-    axios(`${process.env.REACT_APP_API}/todos/`, {
-      method: 'GET',
-    }).then((res) => {
-      setTodos(res.data?.todos)
-    })
+  const fetchTodos = useCallback(async () => {
+    const { data } = await axios.get(`${process.env.REACT_APP_API}/todos/`)
+    setTodos(data?.todos)
   }, [])
 
   useEffect(() => {
     fetchTodos()
   }, [fetchTodos])
 
-  const handleClick = (todo: TodoModel) => {
+  const handleClick = async (todo: TodoModel) => {
     const method = todo.isDone ? 'reopen' : 'close'
+    await axios.put(`${process.env.REACT_APP_API}/todos/${todo._id}/${method}`)
+    fetchTodos()
+  }
 
-    axios(`${process.env.REACT_APP_API}/todos/${todo._id}/${method}`, {
-      method: 'PUT',
-    }).then((res) => {
-      fetchTodos()
+  const handleCreateTodo = async (todoData: TodoForm) => {
+    await axios.post(`${process.env.REACT_APP_API}/todos/`, {
+      title: todoData.title,
+      description: todoData.description,
+      dueDate: todoData.dueDate?.toISOString,
     })
+
+    fetchTodos()
   }
 
   return (
@@ -39,16 +43,7 @@ function App() {
           <Todo key={todo._id} todo={todo} onClick={() => handleClick(todo)} />
         ))}
 
-        <Todo
-          todo={{
-            _id: 'newTodo',
-            title: 'New Todo',
-            description: '_Enter description here..._',
-            isDone: false,
-            dueDate: '',
-          }}
-          onClick={() => {}}
-        />
+        <EditableTodo onSubmit={handleCreateTodo} />
       </div>
     </div>
   )

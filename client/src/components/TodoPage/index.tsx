@@ -5,6 +5,7 @@ import EditableTodo from '../Todo/EditableTodo'
 import TodoList from '../TodoList'
 import Styles from './TodoPage.module.scss'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
+import MenuBar from './MenuBar'
 
 const TodoPage: VFC = () => {
   const queryClient = useQueryClient()
@@ -33,9 +34,7 @@ const TodoPage: VFC = () => {
 
   return (
     <div>
-      <header>
-        <h1>Todo-a-rama</h1>
-      </header>
+      <MenuBar>Todo-a-rama</MenuBar>
       {isLoading || !data ? (
         <h1>Loading...</h1>
       ) : error ? (

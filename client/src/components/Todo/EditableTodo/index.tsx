@@ -1,6 +1,6 @@
 import React, { VFC } from 'react'
-import Styles from '../Todo/Todo.module.scss'
-// import { TodoModel } from '../../types/Todo.type'
+import EditStyles from './EditableTodo.module.scss'
+import TodoStyles from '../Todo.module.scss'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
@@ -32,32 +32,25 @@ const EditableTodo: VFC<{ onSubmit: (todoData: TodoForm) => void }> = ({
 
   return (
     <form onSubmit={handleSubmit(onHandleSubmit)}>
-      <article className={Styles.todo}>
+      <article className={TodoStyles.todo}>
         <header>
-          <div className={`${Styles.title}`}>
+          <div className={TodoStyles.title}>
             <input
               type="text"
+              className={EditStyles.editTitle}
               placeholder="Enter title"
               {...register('title')}
               required
             />
           </div>
-          <div className={Styles.status}>
+          <div className={TodoStyles.status}>
             <button type="submit">Save</button>{' '}
           </div>
         </header>
         <section style={{ display: 'flex', flexDirection: 'column' }}>
           <textarea
             placeholder="Enter description (optional)"
-            style={{
-              flex: '1 0 auto',
-              width: 'calc(100% + 1rem)',
-              boxSizing: 'border-box',
-              outline: 'none',
-              resize: 'none',
-              border: 'none',
-              margin: '-0.5rem -0.5rem -1.5rem -0.5rem',
-            }}
+            className={EditStyles.editDescription}
             {...register('description')}
           />
         </section>

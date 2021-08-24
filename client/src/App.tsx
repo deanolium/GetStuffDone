@@ -6,6 +6,7 @@ import './App.css'
 import { TodoForm, TodoModel } from './types/Todo.type'
 import Todo from './components/Todo'
 import EditableTodo from './components/Todo/EditableTodo/index'
+import TodoList from './components/TodoList'
 
 function App() {
   const [todos, setTodos] = useState<TodoModel[]>()
@@ -19,15 +20,7 @@ function App() {
     fetchTodos()
   }, [fetchTodos])
 
-  const handleClick = async (todo: TodoModel) => {
-    const method = todo.isDone ? 'reopen' : 'close'
-    await axios.put(`${process.env.REACT_APP_API}/todos/${todo._id}/${method}`)
-    fetchTodos()
-  }
-
   const handleCreateTodo = async (todoData: TodoForm) => {
-    console.log(todoData)
-    console.log(todoData.dueDate?.toISOString())
     await axios.post(`${process.env.REACT_APP_API}/todos/`, {
       title: todoData.title,
       description: todoData.description,
@@ -41,10 +34,7 @@ function App() {
     <div>
       <h1>Todos!</h1>
       <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
-        {todos?.map((todo) => (
-          <Todo key={todo._id} todo={todo} onClick={() => handleClick(todo)} />
-        ))}
-
+        <TodoList todos={todos} fetchTodos={fetchTodos} />
         <EditableTodo onSubmit={handleCreateTodo} />
       </div>
     </div>

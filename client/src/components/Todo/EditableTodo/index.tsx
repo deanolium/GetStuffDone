@@ -4,7 +4,7 @@ import TodoStyles from '../Todo.module.scss'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { TodoForm } from '../../../types/Todo.type'
+import { TodoForm, TodoModel } from '../../../types/Todo.type'
 
 const todoSchema = yup.object().shape({
   title: yup.string().required(),
@@ -15,15 +15,20 @@ const todoSchema = yup.object().shape({
     .transform((curr, orig) => (orig === '' ? null : curr)),
 })
 
-const EditableTodo: VFC<{ onSubmit: (todoData: TodoForm) => void }> = ({
-  onSubmit,
-}) => {
+interface EditableTodoProps {
+  todo?: TodoModel
+  onSubmit: (todoData: TodoForm) => void
+}
+
+const EditableTodo: VFC<EditableTodoProps> = ({ todo, onSubmit }) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({ resolver: yupResolver(todoSchema) })
+  } = useForm({
+    resolver: yupResolver(todoSchema),
+  })
 
   const onHandleSubmit = (data: TodoForm) => {
     onSubmit(data)
@@ -39,6 +44,7 @@ const EditableTodo: VFC<{ onSubmit: (todoData: TodoForm) => void }> = ({
               type="text"
               className={EditStyles.editTitle}
               placeholder="Enter title"
+              defaultValue={todo?.title}
               {...register('title')}
               required
             />
@@ -51,11 +57,19 @@ const EditableTodo: VFC<{ onSubmit: (todoData: TodoForm) => void }> = ({
           <textarea
             placeholder="Enter description (optional)"
             className={EditStyles.editDescription}
+            defaultValue={todo?.description}
             {...register('description')}
           />
         </section>
         <footer>
-          Due: <input type="date" {...register('dueDate')} />
+          Due:{' '}
+          <input
+            type="date"
+            defaultValue={
+              todo?.dueDate && new Date(todo.dueDate).toISOString().slice(0, 10)
+            }
+            {...register('dueDate')}
+          />
         </footer>
       </article>
       {Object.keys(errors).map((errorID) => (

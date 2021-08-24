@@ -26,10 +26,12 @@ function App() {
   }
 
   const handleCreateTodo = async (todoData: TodoForm) => {
+    console.log(todoData)
+    console.log(todoData.dueDate?.toISOString())
     await axios.post(`${process.env.REACT_APP_API}/todos/`, {
       title: todoData.title,
       description: todoData.description,
-      dueDate: todoData.dueDate?.toISOString,
+      dueDate: todoData.dueDate?.toISOString(),
     })
 
     fetchTodos()

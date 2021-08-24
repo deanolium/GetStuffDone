@@ -7,8 +7,12 @@ const Todo: VFC<{ todo: TodoModel; onClick: () => void }> = ({
   todo,
   onClick,
 }) => {
-  const dueDate = new Date(todo.dueDate)
-  const pastDue = !todo.isDone && new Date(new Date().toDateString()) > dueDate
+  let dueDate = undefined,
+    pastDue = false
+  if (todo.dueDate) {
+    dueDate = new Date(todo.dueDate)
+    pastDue = !todo.isDone && new Date(new Date().toDateString()) > dueDate
+  }
 
   return (
     <article className={Styles.todo}>
@@ -24,7 +28,8 @@ const Todo: VFC<{ todo: TodoModel; onClick: () => void }> = ({
         <ReactMarkdown>{todo.description}</ReactMarkdown>
       </section>
       <footer className={`${pastDue && Styles.pastDue}`}>
-        Due: {dueDate.toDateString()}
+        {dueDate && <span>Due: {dueDate.toDateString()}</span>}
+        &nbsp;
       </footer>
     </article>
   )

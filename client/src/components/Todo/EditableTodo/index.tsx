@@ -4,7 +4,7 @@ import Styles from '../Todo/Todo.module.scss'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { TodoForm } from '../../types/Todo.type'
+import { TodoForm } from '../../../types/Todo.type'
 
 const todoSchema = yup.object().shape({
   title: yup.string().required(),

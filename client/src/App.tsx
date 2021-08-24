@@ -5,7 +5,7 @@ import { useState } from 'react'
 import './App.css'
 import { TodoForm, TodoModel } from './types/Todo.type'
 import Todo from './components/Todo'
-import EditableTodo from './components/EditableTodo/index'
+import EditableTodo from './components/Todo/EditableTodo/index'
 
 function App() {
   const [todos, setTodos] = useState<TodoModel[]>()

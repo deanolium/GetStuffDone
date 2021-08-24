@@ -5,3 +5,9 @@ export interface TodoModel {
   isDone: boolean
   dueDate: string
 }
+
+export interface TodoForm {
+  title: string
+  description?: string
+  dueDate?: Date
+}

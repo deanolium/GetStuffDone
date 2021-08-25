@@ -1,36 +1,21 @@
-import axios from 'axios'
 import React, { VFC } from 'react'
-import { TodoModel, TodoForm } from '../../types/Todo.type'
 import EditableTodo from '../Todo/EditableTodo'
 import TodoList from '../TodoList'
 import Styles from './TodoPage.module.scss'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import MenuBar from './MenuBar'
+import { createTodoAPI, getTodosAPI } from '../../api'
 
 const TodoPage: VFC = () => {
   const queryClient = useQueryClient()
 
-  const { isLoading, error, data } = useQuery('todos', async () => {
-    const { data } = await axios.get<{ todos: TodoModel[] }>(
-      `${process.env.REACT_APP_API}/todos/`
-    )
-    return data
-  })
+  const { isLoading, error, data } = useQuery('todos', getTodosAPI)
 
-  const createTodo = useMutation(
-    async (todoData: TodoForm) => {
-      await axios.post(`${process.env.REACT_APP_API}/todos/`, {
-        title: todoData.title,
-        description: todoData.description,
-        dueDate: todoData.dueDate?.toISOString(),
-      })
+  const createTodo = useMutation(createTodoAPI, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('todos')
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('todos')
-      },
-    }
-  )
+  })
 
   return (
     <div>

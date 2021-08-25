@@ -1,13 +1,16 @@
-/* eslint-disable array-callback-return */
-import axios from 'axios'
 import React, { VFC } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectMode } from '../../redux/selectors/mode.selectors'
 import { enterViewMode, Modes } from '../../redux/slices/modes'
-import { TodoForm, TodoModel } from '../../types/Todo.type'
+import { TodoModel } from '../../types/Todo.type'
 import Todo from '../Todo'
 import EditableTodo from '../Todo/EditableTodo'
+import {
+  deleteTodoAPI,
+  updateTodoAPI,
+  switchTodoStateAPI,
+} from '../../api/index'
 
 interface TodoListProps {
   todos?: TodoModel[]
@@ -18,46 +21,24 @@ const TodoList: VFC<TodoListProps> = ({ todos }) => {
   const dispatch = useDispatch()
   const queryClient = useQueryClient()
 
-  const switchTodoDoneState = useMutation(
-    async (todo: TodoModel) => {
-      const method = todo.isDone ? 'reopen' : 'close'
-      await axios.put(
-        `${process.env.REACT_APP_API}/todos/${todo._id}/${method}`
-      )
+  const switchTodoDoneState = useMutation(switchTodoStateAPI, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('todos')
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('todos')
-      },
-    }
-  )
+  })
 
-  const updateTodo = useMutation(
-    async ({ id, todo }: { id: string; todo: TodoForm }) => {
-      await axios.put(`${process.env.REACT_APP_API}/todos/${id}`, {
-        title: todo.title,
-        description: todo.description,
-        dueDate: todo.dueDate?.toISOString(),
-      })
+  const updateTodo = useMutation(updateTodoAPI, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('todos')
+      dispatch(enterViewMode())
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('todos')
-        dispatch(enterViewMode())
-      },
-    }
-  )
+  })
 
-  const deleteTodo = useMutation(
-    async (id: string) => {
-      await axios.delete(`${process.env.REACT_APP_API}/todos/${id}`)
+  const deleteTodo = useMutation(deleteTodoAPI, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('todos')
     },
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('todos')
-      },
-    }
-  )
+  })
 
   const RenderTodo: VFC<{ todo: TodoModel }> = ({ todo }) => {
     switch (mode) {

@@ -9,7 +9,6 @@ import {
   Modes,
 } from '../../../redux/slices/modes'
 
-// TODO: Add delete mode functionality
 // TODO: Add Filtering
 const MenuBar: FC = ({ children }) => {
   const mode = useSelector(selectMode)

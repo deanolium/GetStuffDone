@@ -5,6 +5,7 @@ import { selectMode } from '../../../redux/selectors/mode.selectors'
 import {
   enterEditMode,
   enterViewMode,
+  enterDeleteMode,
   Modes,
 } from '../../../redux/slices/modes'
 
@@ -14,28 +15,18 @@ const MenuBar: FC = ({ children }) => {
   const mode = useSelector(selectMode)
   const dispatch = useDispatch()
 
-  let modeText
-  let nextModeFunction: ActionCreatorWithoutPayload<string>
-
-  switch (mode) {
-    case Modes.View:
-      modeText = 'View Mode'
-      nextModeFunction = enterEditMode
-      break
-
-    case Modes.Edit:
-      modeText = 'Edit Mode'
-      nextModeFunction = enterViewMode
-  }
-
-  const setMode = () => {
-    dispatch(nextModeFunction())
-  }
-
   return (
     <header>
       <h1>{children}</h1>
-      <button onClick={setMode}>{modeText}</button>
+      {mode !== Modes.View && (
+        <button onClick={() => dispatch(enterViewMode())}>View Mode</button>
+      )}
+      {mode !== Modes.Edit && (
+        <button onClick={() => dispatch(enterEditMode())}>Edit Mode</button>
+      )}
+      {mode !== Modes.Delete && (
+        <button onClick={() => dispatch(enterDeleteMode())}>Delete Mode</button>
+      )}
     </header>
   )
 }

@@ -48,16 +48,30 @@ const TodoList: VFC<TodoListProps> = ({ todos }) => {
     }
   )
 
-  return (
-    <>
-      {todos?.map((todo) =>
-        mode === Modes.View ? (
+  const deleteTodo = useMutation(
+    async (id: string) => {
+      await axios.delete(`${process.env.REACT_APP_API}/todos/${id}`)
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('todos')
+      },
+    }
+  )
+
+  const RenderTodo: VFC<{ todo: TodoModel }> = ({ todo }) => {
+    switch (mode) {
+      case Modes.View:
+        return (
           <Todo
             key={todo._id}
             todo={todo}
             onClick={() => switchTodoDoneState.mutate(todo)}
           />
-        ) : (
+        )
+
+      case Modes.Edit:
+        return (
           <EditableTodo
             key={todo._id}
             todo={todo}
@@ -66,7 +80,24 @@ const TodoList: VFC<TodoListProps> = ({ todos }) => {
             }
           />
         )
-      )}
+
+      case Modes.Delete:
+        return (
+          <Todo
+            key={todo._id}
+            todo={todo}
+            deletable
+            onClick={() => deleteTodo.mutate(todo._id)}
+          />
+        )
+    }
+  }
+
+  return (
+    <>
+      {todos?.map((todo) => (
+        <RenderTodo key={todo._id} todo={todo} />
+      ))}
     </>
   )
 }

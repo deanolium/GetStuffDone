@@ -3,10 +3,13 @@ import Styles from './Todo.module.scss'
 import ReactMarkdown from 'react-markdown'
 import { TodoModel } from '../../types/Todo.type'
 
-const Todo: VFC<{ todo: TodoModel; onClick: () => void }> = ({
-  todo,
-  onClick,
-}) => {
+interface TodoProps {
+  todo: TodoModel
+  deletable?: boolean
+  onClick: () => void
+}
+
+const Todo: VFC<TodoProps> = ({ todo, deletable, onClick }) => {
   let dueDate = undefined,
     pastDue = false
   if (todo.dueDate) {
@@ -21,7 +24,7 @@ const Todo: VFC<{ todo: TodoModel; onClick: () => void }> = ({
           {todo.title}
         </div>
         <div className={Styles.status} onClick={onClick}>
-          {todo.isDone ? '👍' : '👎'}
+          {deletable ? '🗑' : todo.isDone ? '👍' : '👎'}
         </div>
       </header>
       <section>

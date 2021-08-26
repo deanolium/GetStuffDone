@@ -1,10 +1,11 @@
-import React, { VFC } from 'react'
+import React, { createRef, VFC } from 'react'
 import EditableTodo from '../Todo/EditableTodo'
 import TodoList from '../TodoList'
 import Styles from './TodoPage.module.scss'
 import { useMutation, useQuery, useQueryClient } from 'react-query'
 import MenuBar from './MenuBar'
 import { createTodoAPI, getTodosAPI } from '../../api'
+import AnimatePosition from '../AnimatePosition'
 
 const TodoPage: VFC = () => {
   const queryClient = useQueryClient()
@@ -30,7 +31,12 @@ const TodoPage: VFC = () => {
       ) : (
         <div className={Styles.container}>
           <TodoList todos={data.todos} />
-          <EditableTodo onSubmit={(newTodo) => createTodo.mutate(newTodo)} />
+          <AnimatePosition>
+            <EditableTodo
+              onSubmit={(newTodo) => createTodo.mutate(newTodo)}
+              ref={createRef<HTMLFormElement>()}
+            />
+          </AnimatePosition>
         </div>
       )}
     </div>

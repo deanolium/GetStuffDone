@@ -1,4 +1,4 @@
-import React, { VFC } from 'react'
+import React, { VFC, createRef } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectMode } from '../../redux/selectors/mode.selectors'
@@ -6,6 +6,7 @@ import { enterViewMode, Modes } from '../../redux/slices/modes'
 import { TodoModel } from '../../types/Todo.type'
 import Todo from '../Todo'
 import EditableTodo from '../Todo/EditableTodo'
+import AnimatePosition from '../AnimatePosition'
 import {
   deleteTodoAPI,
   updateTodoAPI,
@@ -75,11 +76,13 @@ const TodoList: VFC<TodoListProps> = ({ todos }) => {
   }
 
   return (
-    <>
-      {todos?.map((todo) => (
-        <RenderTodo key={todo._id} todo={todo} />
+    <AnimatePosition>
+      {todos?.map((todo: TodoModel) => (
+        <div key={todo._id} ref={createRef()}>
+          <RenderTodo todo={todo} />
+        </div>
       ))}
-    </>
+    </AnimatePosition>
   )
 }
 

@@ -1,4 +1,3 @@
-import { ActionCreatorWithoutPayload } from '@reduxjs/toolkit'
 import React, { FC } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { selectMode } from '../../../redux/selectors/mode.selectors'

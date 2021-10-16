@@ -1,0 +1,21 @@
+.menuBar {
+  display: flex;
+  flex-direction: row;
+  margin: 0 1em 0 1em;
+
+  h1 {
+    flex: 1 0 auto;
+  }
+
+  .buttonContainer {
+    flex: 0 0 auto;
+    align-self: center;
+    margin-right: 1em;
+    button {
+      width: 8em;
+      height: 2.5em;
+      margin: 0 0.5em;
+      border-radius: 1em;
+    }
+  }
+}

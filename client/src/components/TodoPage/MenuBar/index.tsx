@@ -7,6 +7,7 @@ import {
   enterDeleteMode,
   Modes,
 } from '../../../redux/slices/modes'
+import Styles from './MenuBar.module.scss'
 
 // TODO: Add Filtering
 const MenuBar: FC = ({ children }) => {
@@ -14,17 +15,21 @@ const MenuBar: FC = ({ children }) => {
   const dispatch = useDispatch()
 
   return (
-    <header>
+    <header className={Styles.menuBar}>
       <h1>{children}</h1>
-      {mode !== Modes.View && (
-        <button onClick={() => dispatch(enterViewMode())}>View Mode</button>
-      )}
-      {mode !== Modes.Edit && (
-        <button onClick={() => dispatch(enterEditMode())}>Edit Mode</button>
-      )}
-      {mode !== Modes.Delete && (
-        <button onClick={() => dispatch(enterDeleteMode())}>Delete Mode</button>
-      )}
+      <div className={Styles.buttonContainer}>
+        {mode !== Modes.View && (
+          <button onClick={() => dispatch(enterViewMode())}>View Mode</button>
+        )}
+        {mode !== Modes.Edit && (
+          <button onClick={() => dispatch(enterEditMode())}>Edit Mode</button>
+        )}
+        {mode !== Modes.Delete && (
+          <button onClick={() => dispatch(enterDeleteMode())}>
+            Delete Mode
+          </button>
+        )}
+      </div>
     </header>
   )
 }
